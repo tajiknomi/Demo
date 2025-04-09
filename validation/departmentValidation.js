@@ -11,18 +11,8 @@ const departmentValidationSchema = Joi.object({
       'any.required': '"Department Name" is required',
     }),
 
-  collectedAmount: Joi.number()
-    .precision(2)
-    .min(0)
-    .required()
-    .messages({
-      'number.base': '"Collected Amount" must be a number',
-      'number.min': '"Collected Amount" must be zero or more',
-      'any.required': '"Collected Amount" is required',
-    }),
-
   sharePercentage: Joi.number()
-    .precision(3) // allow floats like 33.33
+    .precision(3)
     .min(0)
     .max(100)
     .required()
@@ -33,5 +23,6 @@ const departmentValidationSchema = Joi.object({
       'any.required': '"Share Percentage" is required',
     }),
 });
+
 
 module.exports = departmentValidationSchema;

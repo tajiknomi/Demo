@@ -62,8 +62,9 @@ router.post("/submitForm", (req, res) => {
       // Save the record
       const record = new Record({ ...recordData, attachments: attachmentPaths });
       await record.save();
-      // Update collectedAmount in the corresponding department
+      // Update collectedAmount in the corresponding department collection
       const { department, amount } = recordData;
+      console.log(department)
       await Department.findOneAndUpdate(
         { name: department },
         { $inc: { collectedAmount: parseFloat(amount) } }

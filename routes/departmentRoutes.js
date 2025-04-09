@@ -1,78 +1,105 @@
 const express = require("express");
 const router = express.Router();
 const Department = require('../models/Department');
+const Record = require('../models/Record');
 const departmentValidationSchema = require('../validation/departmentValidation');
 
 // Route to add a new department
 router.post('/share', async (req, res) => {
   try {
-    // Validate input data
     const { error } = departmentValidationSchema.validate(req.body);
     if (error) {
       return res.status(400).json({ error: error.details[0].message });
     }
 
-    const { name, sharePercentage, collectedAmount } = req.body;
+    let { name, sharePercentage } = req.body;
+    name = name.trim().toLowerCase(); // Normalize name to lowercase
+    const existingDepartment = await Department.findOne({ name });
 
-    // Fetch all departments except the one being updated/inserted
-    const otherDepartments = await Department.find({ name: { $ne: name } });
-
-    // Calculate total percentage with new entry included
-    const currentTotal = otherDepartments.reduce((sum, dept) => sum + dept.sharePercentage, 0);
-    const newTotal = currentTotal + sharePercentage;
-
-    if (newTotal > 100) {
+    // Check if the share percentage is valid before proceeding
+    const departments = await Department.find({ name: { $ne: name } });
+    const totalExistingPercentage = departments.reduce((sum, dept) => sum + dept.sharePercentage, 0);
+    if (totalExistingPercentage + sharePercentage > 100) {
       return res.status(400).json({
-        message: "The total share percentage exceeds 100%",
-        hint: "Please reduce the share percentage of one or more existing departments to accommodate this update."
+        message: "Total share percentage exceeds 100%. Please reduce the percentage from other department(s) to accommodate this one.",
       });
     }
 
-    // Upsert the department
-    await Department.findOneAndUpdate(
-      { name },
-      { $set: { sharePercentage, collectedAmount } },
-      { upsert: true, new: true, runValidators: true }
-    );
+    if (existingDepartment) {
+      existingDepartment.sharePercentage = sharePercentage;
+      await existingDepartment.save();
+      return res.status(200).json({ message: "Department updated successfully." });
+    } else {
 
-    res.status(200).json({ message: 'Department updated successfully' });
+      // Aggregate the sum of amounts for this department in Record collection
+      const recordSum = await Record.aggregate([
+        { $match: { department: name } },
+        { $group: { _id: null, total: { $sum: { $toDouble: "$amount" } } } }
+      ]);
+ //     console.log("Record aggregation result:", recordSum);
+      const collectedAmount = recordSum.length > 0 ? recordSum[0]?.total : 0.0;
+      const department = new Department({
+        name,
+        collectedAmount,
+        sharePercentage
+      });
+
+      await department.save();
+      return res.status(201).json({ message: "Department added successfully." });
+    }
   } catch (err) {
-    res.status(500).json({ message: 'Server error', error: err.message });
+    console.error(err);  // Log the error for debugging purposes
+    res.status(500).json({ message: "Server error", error: err.message });
   }
 });
-
-
 
 router.post('/bulk-share', async (req, res) => {
   try {
-    const departments = req.body; // Expecting an array of departments
+    const departmentsInput = req.body;
 
-    // Step 1: Validate total percentage
-    const totalPercentage = departments.reduce((sum, dept) => sum + dept.sharePercentage, 0);
+    // Total percentage after adding new ones
+    const existingDepartments = await Department.find();
+    const existingPercentage = existingDepartments.reduce((sum, dept) => sum + dept.sharePercentage, 0);
 
-    if (totalPercentage > 100) {
+    const newPercentage = departmentsInput.reduce((sum, dept) => sum + dept.sharePercentage, 0);
+    if (existingPercentage + newPercentage > 100) {
       return res.status(400).json({
-        message: 'The combined share percentage of all departments cannot exceed 100%',
-        totalSubmittedPercentage: totalPercentage
+        message: "Total share percentage exceeds 100%. Please adjust other department percentages to fit within the limit.",
       });
     }
 
-    // Step 2: Upsert each department (create if not exists, update otherwise)
-    const departmentPromises = departments.map(dept =>
-      Department.findOneAndUpdate(
-        { name: dept.name },
-        { $set: dept },
-        { upsert: true, new: true, runValidators: true }
-      )
-    );
+    const departmentPromises = departmentsInput.map(async (departmentData) => {
+      const { name, sharePercentage } = departmentData;
+      const existing = await Department.findOne({ name: name.toLowerCase().trim() });
+
+      if (existing) {
+        existing.sharePercentage = sharePercentage;
+        return existing.save();
+      } else {
+        // Get collectedAmount from records
+        const recordSum = await Record.aggregate([
+          { $match: { department: name.toLowerCase() } },
+          { $group: { _id: null, total: { $sum: { $toDouble: "$amount" } } } }
+        ]);
+        const collectedAmount = recordSum[0]?.total || 0.0;
+
+        const department = new Department({
+          name,
+          collectedAmount,
+          sharePercentage
+        });
+
+        return department.save();
+      }
+    });
 
     await Promise.all(departmentPromises);
-    res.status(200).json({ message: 'Departments updated successfully' });
+
+    res.status(201).json({ message: "Departments processed successfully." });
   } catch (err) {
-    res.status(500).json({ message: 'Error updating departments', error: err.message });
+    res.status(500).json({ message: "Error processing departments", error: err.message });
   }
 });
-
 
 router.get('/executive-summary', async (req, res) => {
   try {
