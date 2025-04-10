@@ -100,7 +100,6 @@ router.post('/bulk-share', async (req, res) => {
   }
 });
 
-
 router.get('/executive-summary', async (req, res) => {
   try {
     const departments = await Department.find();
@@ -133,5 +132,15 @@ router.get('/executive-summary', async (req, res) => {
   }
 });
 
+// GET /api/department — fetch all departments with name and sharePercentage
+router.get('/', async (req, res) => {
+  try {
+    const departments = await Department.find({}, 'name sharePercentage');
+    res.json(departments);
+  } catch (err) {
+    console.error('Error fetching departments:', err);
+    res.status(500).json({ message: 'Server error while fetching departments' });
+  }
+});
 
 module.exports = router;

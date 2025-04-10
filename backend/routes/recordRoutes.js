@@ -35,6 +35,10 @@ router.post("/submitForm", (req, res) => {
     try {
       const { error, value } = await recordFormValidationSchema.validate(req.body);
       if (error) {
+        // Cleanup uploaded files (as the submission is failed)
+        if (req.files) {
+          req.files.forEach(file => fs.unlinkSync(file.path));
+        }
         return res.status(400).json({ message: error.details[0].message }); // send specific error message to client
         //return res.status(400).json({ message: "Bad Request" }); // send a generic error message to client without sharing the internal details
       }
@@ -52,7 +56,7 @@ router.post("/submitForm", (req, res) => {
       // Check for existing MRN
       const existingRecord = await Record.findOne({ mrnNumber: recordData.mrnNumber });
       if (existingRecord) {
-        // Cleanup uploaded files
+        // Cleanup uploaded files (as the submission is failed)
         if (req.files) {
           req.files.forEach(file => fs.unlinkSync(file.path));
         }

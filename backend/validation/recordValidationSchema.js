@@ -24,7 +24,7 @@ const recordValidationSchema = Joi.object({
 
   department: Joi.string()
     .lowercase()
-    .pattern(/^[A-Za-z\s]+$/)
+    .pattern(/^[A-Za-z\s\\/]+$/)
     .required()
     .messages({
       'string.pattern.base': '"Department" is invalid, only letters and spaces are allowed',

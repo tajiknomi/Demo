@@ -47,7 +47,15 @@ const SubmitRecord = () => {
         title="Enter CNIC in format 12345-1234567-1"
         onChange={handleChange}
       />
-      <input name="department" placeholder="Department" onChange={handleChange} />
+      {/* { <input name="department" placeholder="Department" onChange={handleChange} /> } */}
+      <select name="department" value={formData.department} onChange={handleChange} required>
+        <option value="">Select Department</option>
+        <option value="Radiology">Radiology</option>
+        <option value="Cardiology">Cardiology</option>
+        <option value="E/R">E/R</option>
+        <option value="OPD">OPD</option>
+      </select>
+
       <input name="doctor" placeholder="Doctor" onChange={handleChange} />
       <input name="prescription" placeholder="Prescription (comma-separated)" onChange={handleChange} />
       <input name="tests" placeholder="Tests (comma-separated)" onChange={handleChange} />
