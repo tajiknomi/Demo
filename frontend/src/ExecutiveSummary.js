@@ -9,7 +9,9 @@ const ExecutiveSummary = () => {
   useEffect(() => {
     const fetchSummary = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/department/executive-summary', { withCredentials: true });
+        const res = await axios.get('http://localhost:5000/api/department/executive-summary', {
+          withCredentials: true
+        });
         setSummary(res.data);
       } catch (err) {
         setMessage(err.response?.data?.message || 'Failed to load summary');
@@ -27,9 +29,19 @@ const ExecutiveSummary = () => {
 
   const pieChartOptions = {
     title: 'Department Share Distribution',
-    pieHole: 0.4,
-    is3D: false,
-    legend: { position: 'right' },
+    pieHole: 0.4, // Will be ignored since is3D is true
+    is3D: true,
+    pieStartAngle: 100,
+    sliceVisibilityThreshold: 0.02, // hides slices under 2%
+    legend: {
+      position: 'bottom',
+      alignment: 'center',
+      textStyle: {
+        color: '#233238',
+        fontSize: 14,
+      },
+    },
+    colors: ['#8AD1C2', '#9F8AD1', '#D18A99', '#BCD18A', '#D1C28A', '#D18AAD', '#8AB5D1'],
   };
 
   return (
