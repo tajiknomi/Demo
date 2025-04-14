@@ -29,10 +29,10 @@ const ExecutiveSummary = () => {
 
   const pieChartOptions = {
     title: 'Department Share Distribution',
-    pieHole: 0.4, // Will be ignored since is3D is true
+    pieHole: 0.1, // Will be ignored since is3D is true
     is3D: true,
-    pieStartAngle: 100,
-    sliceVisibilityThreshold: 0.02, // hides slices under 2%
+    pieStartAngle: 0,
+    sliceVisibilityThreshold: 0.01, // hides slices under 1%
     legend: {
       position: 'bottom',
       alignment: 'center',
