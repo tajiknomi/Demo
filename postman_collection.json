@@ -1,0 +1,401 @@
+{
+	"info": {
+		"_postman_id": "883dfc7e-317f-4424-9647-18740aa89f38",
+		"name": "RIC_DEMO",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31634253"
+	},
+	"item": [
+		{
+			"name": "Register User Account",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"user\",\r\n  \"password\": \"123456\",\r\n  \"role\": \"operator\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/user/register",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"username\": \"user\",\r\n  \"password\": \"123456\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/user/login",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"user",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "submitRecordWithAttachment",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data; boundary=----WebKitFormBoundaryP5ovDiacBYB7WDju",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "mrnNumber",
+							"value": "4",
+							"type": "text"
+						},
+						{
+							"key": "patientName",
+							"value": "jalal",
+							"type": "text"
+						},
+						{
+							"key": "cnic",
+							"value": "11111-1111111-1",
+							"type": "text"
+						},
+						{
+							"key": "department",
+							"value": "E/R",
+							"type": "text"
+						},
+						{
+							"key": "doctor",
+							"value": "Sabtain",
+							"type": "text"
+						},
+						{
+							"key": "prescription",
+							"value": "Paracetamol,Brufin",
+							"type": "text"
+						},
+						{
+							"key": "tests",
+							"value": "ECG, HIV, SUGAR",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "General",
+							"type": "text"
+						},
+						{
+							"key": "amount",
+							"value": "5200",
+							"type": "text"
+						},
+						{
+							"key": "date",
+							"value": "2025-03-01",
+							"type": "text"
+						},
+						{
+							"key": "attachments",
+							"type": "file",
+							"src": "/C:/Users/illusion/Desktop/sample.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}/api/record/submitForm",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"record",
+						"submitForm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "submitRecordWithAttachment 2",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "multipart/form-data; boundary=----WebKitFormBoundaryP5ovDiacBYB7WDju",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "mrnNumber",
+							"value": "156484",
+							"type": "text"
+						},
+						{
+							"key": "patientName",
+							"value": "jalal",
+							"type": "text"
+						},
+						{
+							"key": "cnic",
+							"value": "11111-1111111-1",
+							"type": "text"
+						},
+						{
+							"key": "department",
+							"value": "Radiology",
+							"type": "text"
+						},
+						{
+							"key": "doctor",
+							"value": "Sabtain",
+							"type": "text"
+						},
+						{
+							"key": "prescription",
+							"value": "Paracetamol,Brufin",
+							"type": "text"
+						},
+						{
+							"key": "tests",
+							"value": "",
+							"type": "text"
+						},
+						{
+							"key": "type",
+							"value": "General",
+							"type": "text"
+						},
+						{
+							"key": "amount",
+							"value": "2500",
+							"type": "text"
+						},
+						{
+							"key": "attachments",
+							"type": "file",
+							"src": "/C:/Users/illusion/Desktop/sample.jpg"
+						}
+					]
+				},
+				"url": {
+					"raw": "{{URL}}/api/record/submitForm",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"record",
+						"submitForm"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "submitSingleDepartment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"radiology\",\r\n  \"sharePercentage\": 10\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/department/share",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"department",
+						"share"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "submitAllDepartmentShares",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "[\r\n  {\r\n    \"name\": \"Cardiology\",\r\n    \"sharePercentage\": 20\r\n  },\r\n  {\r\n    \"name\": \"E/R\",\r\n    \"sharePercentage\": 60\r\n  },\r\n  {\r\n    \"name\": \"Pathology\",\r\n    \"sharePercentage\": 10\r\n  },\r\n  {\r\n    \"name\": \"Radiology\",\r\n    \"sharePercentage\": 10\r\n  }\r\n]",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/department/bulk-share",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"department",
+						"bulk-share"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "viewRecord",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mrnNumber\":\"57\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/record/view",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"record",
+						"view"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "downloadAttachment",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mrnNumber\":\"57\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{URL}}/api/record/view",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"record",
+						"view"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "executiveSummary",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{URL}}/api/department/executive-summary",
+					"host": [
+						"{{URL}}"
+					],
+					"path": [
+						"api",
+						"department",
+						"executive-summary"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "URL",
+			"value": "http://localhost:5000",
+			"type": "string"
+		}
+	]
+}
