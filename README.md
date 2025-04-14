@@ -8,5 +8,5 @@ cd backend && npm install
 
 ## Run
 ```
-cd frontend/ && np
+cd frontend/ && npm start
 ```
