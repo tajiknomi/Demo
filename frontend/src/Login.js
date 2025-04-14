@@ -1,6 +1,7 @@
+// Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('');
@@ -10,8 +11,8 @@ const Login = () => {
 
   const handleLogin = async () => {
     try {
-      await axios.post('http://localhost:5000/api/users/login', { username, password }, { withCredentials: true });
-      navigate('/submit-record');
+      await axios.post('http://localhost:5000/api/user/login', { username, password }, { withCredentials: true });
+      navigate('/');  // Redirect to home page after successful login
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     }
@@ -24,6 +25,10 @@ const Login = () => {
       <input type="text" placeholder="Username" value={username} onChange={(e) => setUsername(e.target.value)} />
       <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
       <button onClick={handleLogin}>Login</button>
+
+      <p style={{ marginTop: '1rem' }}>
+        Don’t have an account? <Link to="/register">Register here</Link>
+      </p>
     </div>
   );
 };

@@ -6,7 +6,7 @@ const PrivateRoute = ({ children }) => {
   const [isAuth, setIsAuth] = useState(null);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/api/users/check-auth', { withCredentials: true })
+    axios.get('http://localhost:5000/api/user/check-auth', { withCredentials: true })
       .then(() => setIsAuth(true))
       .catch(() => setIsAuth(false));
   }, []);

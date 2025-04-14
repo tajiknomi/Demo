@@ -7,7 +7,7 @@ const userRoutes = require("./routes/userRoutes");
 const clientRoutes = require("./routes/recordRoutes");
 const departmentRoutes = require('./routes/departmentRoutes');
 const { verifyToken } = require("./middleware/auth");
-
+const path = require("path");
 
 require("dotenv").config();
 
@@ -18,6 +18,7 @@ app.set('etag', false);
 app.use(cors({ credentials: true, origin: true }));
 app.use(express.json());
 app.use(cookieParser());
+//app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 app.use((req, res, next) => {
   res.set('Cache-Control', 'no-store')
@@ -30,7 +31,7 @@ app.disable('x-powered-by');
 connectToDB();
 
 // Use routes
-app.use("/api/users", userRoutes);
+app.use("/api/user", userRoutes);
 app.use("/api/record", verifyToken, clientRoutes);
 app.use('/api/department', verifyToken, departmentRoutes);
 

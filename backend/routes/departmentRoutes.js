@@ -4,6 +4,7 @@ const Department = require('../models/Department');
 const Record = require('../models/Record');
 const departmentValidationSchema = require('../validation/departmentValidation');
 
+
 // Route to add a new department
 router.post('/share', async (req, res) => {
   try {
@@ -66,6 +67,9 @@ router.post('/bulk-share', async (req, res) => {
       });
     }
 
+    // Remove existing department entries before adding new ones
+    await Department.deleteMany({});  // This deletes all existing entries
+
     const departmentPromises = departmentsInput.map(async (departmentData) => {
       const { name, sharePercentage } = departmentData;
       const existing = await Department.findOne({ name: name.toLowerCase().trim() });
@@ -80,6 +84,7 @@ router.post('/bulk-share', async (req, res) => {
           { $match: { department: name.toLowerCase() } },
           { $group: { _id: null, total: { $sum: { $toDouble: "$amount" } } } }
         ]);
+
         const collectedAmount = recordSum[0]?.total || 0.0;
 
         const department = new Department({
@@ -92,6 +97,7 @@ router.post('/bulk-share', async (req, res) => {
       }
     });
 
+    // Wait for all department promises to resolve
     await Promise.all(departmentPromises);
 
     res.status(201).json({ message: "Departments percentage share updated successfully." });
@@ -132,7 +138,7 @@ router.get('/executive-summary', async (req, res) => {
   }
 });
 
-// GET /api/department — fetch all departments with name and sharePercentage
+// fetch all department
 router.get('/', async (req, res) => {
   try {
     const departments = await Department.find({}, 'name sharePercentage');

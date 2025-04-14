@@ -2,11 +2,13 @@ const Joi = require('joi');
 
 const recordValidationSchema = Joi.object({
   mrnNumber: Joi.string()
-    .required()
-    .messages({
-      'any.required': '"MRN Number" is required',
-      'string.base': '"MRN Number" must be a string',
-    }),
+  .pattern(/^[a-zA-Z0-9]+$/) // Accepts only alphanumeric characters (letters and numbers)
+  .required()
+  .messages({
+    'any.required': '"MRN Number" is required',
+    'string.base': '"MRN Number" must be a string',
+    'string.pattern.base': '"MRN Number" must contain only alphabets and numbers',
+  }),
 
   patientName: Joi.string()
     .pattern(/^[A-Za-z\s]+$/)

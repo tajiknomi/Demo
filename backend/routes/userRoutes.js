@@ -4,12 +4,12 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const userValidationSchema = require("../validation/userValidationSchema.js");
+const { verifyToken } = require("../middleware/auth");
 const router = express.Router();
 const JWT_SECRET = process.env.JWT_SECRET;
 
 // POST route for user login
 router.post("/login", async (req, res) => {
-  console.log("in the backend /login route")
   const { username, password } = req.body;
   try {
     const user = await User.findOne({ username });
